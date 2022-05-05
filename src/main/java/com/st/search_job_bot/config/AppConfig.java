@@ -1,10 +1,11 @@
 package com.st.search_job_bot.config;
 
-import com.st.search_job_bot.SearchJobsTGBot;
-import com.st.search_job_bot.TelegramFacade;
+import com.st.search_job_bot.service.TelegramFacade;
 import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 
 @Configuration
@@ -19,9 +20,9 @@ public class AppConfig {
     }
 
     @Bean
-    public SearchJobsTGBot springWebhookBot(SetWebhook setWebhook, TelegramFacade telegramFacade) {
+    public JobTGBot springWebhookBot(SetWebhook setWebhook, TelegramFacade telegramFacade) {
 
-        SearchJobsTGBot bot = new SearchJobsTGBot(setWebhook, telegramFacade);
+        JobTGBot bot = new JobTGBot(setWebhook, telegramFacade);
 
         bot.setWebHookPath(telegramConfig.getWebHookPath());
         bot.setBotUserName(telegramConfig.getBotUserName());
@@ -30,4 +31,14 @@ public class AppConfig {
         return bot;
 
     }
+
+    @Bean
+    public MessageSource messageSource(){
+        ReloadableResourceBundleMessageSource messageSource
+                = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return  messageSource;
+    }
+
 }

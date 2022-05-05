@@ -1,17 +1,14 @@
-package com.st.search_job_bot;
+package com.st.search_job_bot.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.st.search_job_bot.service.TelegramFacade;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.starter.SpringWebhookBot;
 
-public class SearchJobsTGBot extends SpringWebhookBot {
+public class JobTGBot extends SpringWebhookBot {
 
     private String webHookPath;
     private String botUserName;
@@ -19,12 +16,12 @@ public class SearchJobsTGBot extends SpringWebhookBot {
 
     private TelegramFacade telegramFacade;
 
-    public SearchJobsTGBot(SetWebhook setWebhook, TelegramFacade telegramFacade, DefaultBotOptions defaultBotOptions) {
+    public JobTGBot(SetWebhook setWebhook, TelegramFacade telegramFacade, DefaultBotOptions defaultBotOptions) {
         super(defaultBotOptions, setWebhook);
         this.telegramFacade = telegramFacade;
     }
 
-    public SearchJobsTGBot(SetWebhook setWebhook, TelegramFacade telegramFacade) {
+    public JobTGBot(SetWebhook setWebhook, TelegramFacade telegramFacade) {
         super(setWebhook);
         this.telegramFacade = telegramFacade;
     }
@@ -32,21 +29,12 @@ public class SearchJobsTGBot extends SpringWebhookBot {
     @Override
     public BotApiMethod onWebhookUpdateReceived(Update update) {
 
-        if (update.getMessage() != null && update.getMessage().hasText()) {
-//            System.out.println(update.getMessage());
-//            try {
-//                execute(new SendMessage(update.getMessage().getChatId().toString(), "Hi " + update.getMessage().getText()));
-//            } catch (TelegramApiException e) {
-//                e.printStackTrace();
-//            }
-
-            try {
-                execute(telegramFacade.handleUpdate(update));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+        try {
+            execute(telegramFacade.handleUpdate(update));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
-        return null;
+            return null;
     }
 
     @Override
